@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,7 +31,7 @@ export const ZookeeperConnectionManager: React.FC<ZookeeperConnectionManagerProp
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newConnectionName, setNewConnectionName] = useState('');
   const [newConnectionUrl, setNewConnectionUrl] = useState('');
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const { toast } = useToast();
 
   const handleAddConnection = () => {
@@ -88,7 +87,7 @@ export const ZookeeperConnectionManager: React.FC<ZookeeperConnectionManagerProp
 
   return (
     <Card className="mb-6">
-      <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
           <CardHeader className="cursor-pointer hover:bg-slate-50 transition-colors">
             <CardTitle className="flex items-center justify-between">
@@ -96,10 +95,10 @@ export const ZookeeperConnectionManager: React.FC<ZookeeperConnectionManagerProp
                 <Server className="h-5 w-5" />
                 Zookeeper Connections
               </div>
-              {isCollapsed ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
+              {isOpen ? (
                 <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
               )}
             </CardTitle>
           </CardHeader>
