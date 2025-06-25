@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Sidebar, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ZookeeperSidebar } from "@/components/ZookeeperSidebar";
 import { ZNodeContent } from "@/components/ZNodeContent";
+import { ZookeeperConfig } from "@/components/ZookeeperConfig";
 import { Separator } from "@/components/ui/separator";
+import { ZookeeperProvider, useZookeeper } from "../contexts/ZookeeperContext";
 
 export interface ZNode {
   path: string;
@@ -21,21 +23,20 @@ export interface ZNode {
   };
 }
 
-const ZookeeperBrowser = () => {
+const ZookeeperBrowserContent = () => {
   const [selectedNode, setSelectedNode] = useState<string>('/');
   const [nodeData, setNodeData] = useState<ZNode | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { service, config } = useZookeeper();
 
   const fetchNodeData = async (path: string) => {
+    if (!service) return;
+    
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:12345/get?path=${encodeURIComponent(path)}`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch node data: ${response.statusText}`);
-      }
-      const data = await response.json();
+      const data = await service.getData(path);
       setNodeData(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
@@ -46,8 +47,10 @@ const ZookeeperBrowser = () => {
   };
 
   useEffect(() => {
-    fetchNodeData(selectedNode);
-  }, [selectedNode]);
+    if (service) {
+      fetchNodeData(selectedNode);
+    }
+  }, [selectedNode, service]);
 
   const handleNodeSelect = (path: string) => {
     setSelectedNode(path);
@@ -74,12 +77,13 @@ const ZookeeperBrowser = () => {
                 <div className="flex items-center gap-2">
                   <h1 className="text-2xl font-bold text-slate-800">Zookeeper Browser</h1>
                   <div className="text-sm text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
-                    localhost:12345
+                    {config.mode === 'http' ? config.httpUrl : config.connectionString} ({config.mode})
                   </div>
                 </div>
               </div>
             </header>
             <div className="flex-1 p-6">
+              <ZookeeperConfig />
               <ZNodeContent 
                 nodeData={nodeData}
                 selectedPath={selectedNode}
@@ -92,6 +96,14 @@ const ZookeeperBrowser = () => {
         </div>
       </SidebarProvider>
     </div>
+  );
+};
+
+const ZookeeperBrowser = () => {
+  return (
+    <ZookeeperProvider>
+      <ZookeeperBrowserContent />
+    </ZookeeperProvider>
   );
 };
 

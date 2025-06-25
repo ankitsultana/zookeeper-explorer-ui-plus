@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   Sidebar,
@@ -17,6 +16,7 @@ import { ChevronRight, ChevronDown, Folder, FolderOpen, Plus, RefreshCw, Databas
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useZookeeper } from '../contexts/ZookeeperContext';
 
 interface TreeNode {
   path: string;
@@ -36,6 +36,7 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
   onNodeSelect,
   onRefresh
 }) => {
+  const { service } = useZookeeper();
   const [tree, setTree] = useState<TreeNode>({
     path: '/',
     children: [],
@@ -49,13 +50,13 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
   const { toast } = useToast();
 
   const fetchChildren = async (path: string): Promise<string[]> => {
+    if (!service) {
+      console.error('ZooKeeper service not available');
+      return [];
+    }
+
     try {
-      const response = await fetch(`http://localhost:12345/ls?path=${encodeURIComponent(path)}`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch children: ${response.statusText}`);
-      }
-      const data = await response.json();
-      return data.children || [];
+      return await service.getChildren(path);
     } catch (error) {
       console.error('Error fetching children:', error);
       return [];
@@ -111,6 +112,15 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
   };
 
   const createNode = async () => {
+    if (!service) {
+      toast({
+        title: "Error",
+        description: "ZooKeeper service not available",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!newNodeName.trim()) {
       toast({
         title: "Error",
@@ -123,20 +133,7 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
     const fullPath = selectedParent === '/' ? `/${newNodeName}` : `${selectedParent}/${newNodeName}`;
     
     try {
-      const response = await fetch('http://localhost:12345/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          path: fullPath,
-          data: newNodeData,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to create node: ${response.statusText}`);
-      }
+      await service.create(fullPath, newNodeData);
 
       toast({
         title: "Success",

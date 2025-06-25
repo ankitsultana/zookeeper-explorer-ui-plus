@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { RefreshCw, Save, FileText, Info, Trash2, Clock, Hash, Users } from "luc
 import { ZNode } from '../pages/ZookeeperBrowser';
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useZookeeper } from '../contexts/ZookeeperContext';
 
 interface ZNodeContentProps {
   nodeData: ZNode | null;
@@ -25,6 +25,7 @@ export const ZNodeContent: React.FC<ZNodeContentProps> = ({
   error,
   onRefresh
 }) => {
+  const { service } = useZookeeper();
   const [editedData, setEditedData] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const { toast } = useToast();
@@ -37,21 +38,17 @@ export const ZNodeContent: React.FC<ZNodeContentProps> = ({
   }, [nodeData]);
 
   const saveData = async () => {
-    try {
-      const response = await fetch('http://localhost:12345/set', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          path: selectedPath,
-          data: editedData,
-        }),
+    if (!service) {
+      toast({
+        title: "Error",
+        description: "ZooKeeper service not available",
+        variant: "destructive",
       });
+      return;
+    }
 
-      if (!response.ok) {
-        throw new Error(`Failed to save data: ${response.statusText}`);
-      }
+    try {
+      await service.setData(selectedPath, editedData);
 
       toast({
         title: "Success",
@@ -70,14 +67,17 @@ export const ZNodeContent: React.FC<ZNodeContentProps> = ({
   };
 
   const deleteNode = async () => {
-    try {
-      const response = await fetch(`http://localhost:12345/delete?path=${encodeURIComponent(selectedPath)}`, {
-        method: 'DELETE',
+    if (!service) {
+      toast({
+        title: "Error",
+        description: "ZooKeeper service not available",
+        variant: "destructive",
       });
+      return;
+    }
 
-      if (!response.ok) {
-        throw new Error(`Failed to delete node: ${response.statusText}`);
-      }
+    try {
+      await service.remove(selectedPath);
 
       toast({
         title: "Success",
