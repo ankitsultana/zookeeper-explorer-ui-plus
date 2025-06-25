@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Sidebar, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ZookeeperSidebar } from "@/components/ZookeeperSidebar";
@@ -28,7 +27,9 @@ const ZookeeperBrowserContent = () => {
   const [nodeData, setNodeData] = useState<ZNode | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { service, config } = useZookeeper();
+  const { service, connections, activeConnectionId } = useZookeeper();
+
+  const activeConnection = connections.find(conn => conn.id === activeConnectionId);
 
   const fetchNodeData = async (path: string) => {
     if (!service) return;
@@ -76,9 +77,11 @@ const ZookeeperBrowserContent = () => {
                 <Separator orientation="vertical" className="h-6" />
                 <div className="flex items-center gap-2">
                   <h1 className="text-2xl font-bold text-slate-800">Zookeeper Browser</h1>
-                  <div className="text-sm text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
-                    {config.httpUrl} (HTTP API)
-                  </div>
+                  {activeConnection && (
+                    <div className="text-sm text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
+                      {activeConnection.name} • {activeConnection.url}
+                    </div>
+                  )}
                 </div>
               </div>
             </header>
