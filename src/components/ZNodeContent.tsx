@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { RefreshCw, Save, FileText, Info, Trash2, Clock, Hash, Users } from "lucide-react";
+import { RefreshCw, Save, FileText, Info, Trash2, Clock, Hash, Users, Zap } from "lucide-react";
 import { ZNode } from '../pages/ZookeeperBrowser';
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -267,6 +267,25 @@ export const ZNodeContent: React.FC<ZNodeContentProps> = ({
 
               <Separator />
 
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-yellow-600" />
+                <div className="flex-1">
+                  <div className="text-sm text-slate-600">Node Type</div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={nodeData.stat.ephemeralOwner === 0 ? "secondary" : "destructive"}>
+                      {nodeData.stat.ephemeralOwner === 0 ? "Persistent" : "Ephemeral"}
+                    </Badge>
+                    {nodeData.stat.ephemeralOwner !== 0 && (
+                      <span className="text-xs text-slate-500">
+                        Owner: {nodeData.stat.ephemeralOwner}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-purple-600" />
@@ -296,13 +315,6 @@ export const ZNodeContent: React.FC<ZNodeContentProps> = ({
                   <Badge variant="secondary" className="ml-1">{nodeData.stat.aversion}</Badge>
                 </div>
               </div>
-
-              {nodeData.stat.ephemeralOwner !== 0 && (
-                <div className="mt-4 p-2 bg-yellow-50 border border-yellow-200 rounded-md">
-                  <div className="text-sm font-medium text-yellow-800">Ephemeral Node</div>
-                  <div className="text-xs text-yellow-600">Owner: {nodeData.stat.ephemeralOwner}</div>
-                </div>
-              )}
             </CardContent>
           </Card>
         </div>
