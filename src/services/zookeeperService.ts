@@ -1,4 +1,3 @@
-
 export interface ZookeeperConfig {
   mode: 'http';
   httpUrl: string;
@@ -60,13 +59,13 @@ class ZookeeperService {
     }
   }
 
-  async create(path: string, data: string = ''): Promise<void> {
+  async create(path: string, data: string = '', isEphemeral: boolean = false): Promise<void> {
     const response = await fetch(`${this.config.httpUrl}/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ path, data }),
+      body: JSON.stringify({ path, data, isEphemeral }),
     });
 
     if (!response.ok) {

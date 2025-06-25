@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import {
   Sidebar,
@@ -15,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { ChevronRight, ChevronDown, Folder, FolderOpen, Plus, RefreshCw, Database } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useZookeeper } from '../contexts/ZookeeperContext';
 
@@ -45,6 +47,7 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
   });
   const [newNodeName, setNewNodeName] = useState('');
   const [newNodeData, setNewNodeData] = useState('');
+  const [isEphemeral, setIsEphemeral] = useState(false);
   const [selectedParent, setSelectedParent] = useState('/');
   const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();
@@ -133,15 +136,16 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
     const fullPath = selectedParent === '/' ? `/${newNodeName}` : `${selectedParent}/${newNodeName}`;
     
     try {
-      await service.create(fullPath, newNodeData);
+      await service.create(fullPath, newNodeData, isEphemeral);
 
       toast({
         title: "Success",
-        description: `Node ${fullPath} created successfully`,
+        description: `Node ${fullPath} created successfully${isEphemeral ? ' (ephemeral)' : ''}`,
       });
 
       setNewNodeName('');
       setNewNodeData('');
+      setIsEphemeral(false);
       setDialogOpen(false);
       
       // Refresh the tree
@@ -267,6 +271,16 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
                 onChange={(e) => setNewNodeData(e.target.value)}
                 placeholder="Enter initial data"
               />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="ephemeral"
+                checked={isEphemeral}
+                onCheckedChange={(checked) => setIsEphemeral(checked === true)}
+              />
+              <Label htmlFor="ephemeral" className="text-sm font-normal">
+                Create as ephemeral node
+              </Label>
             </div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setDialogOpen(false)}>
