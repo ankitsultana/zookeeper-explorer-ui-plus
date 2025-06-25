@@ -77,7 +77,7 @@ const ZookeeperBrowserContent = () => {
                 <div className="flex items-center gap-2">
                   <h1 className="text-2xl font-bold text-slate-800">Zookeeper Browser</h1>
                   <div className="text-sm text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
-                    {config.mode === 'http' ? config.httpUrl : config.connectionString} ({config.mode})
+                    {config.httpUrl} (HTTP API)
                   </div>
                 </div>
               </div>
