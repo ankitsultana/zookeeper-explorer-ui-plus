@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import ZookeeperService, { ZookeeperConfig } from '../services/zookeeperService';
 import { ZookeeperConnection } from '../components/ZookeeperConnectionManager';
@@ -31,7 +30,7 @@ export const ZookeeperProvider: React.FC<ZookeeperProviderProps> = ({ children }
     {
       id: 'default',
       name: 'Local Development',
-      url: 'http://localhost:12345'
+      url: 'http://localhost:12345/dev'
     }
   ]);
   const [activeConnectionId, setActiveConnectionId] = useState<string>('default');
@@ -40,7 +39,7 @@ export const ZookeeperProvider: React.FC<ZookeeperProviderProps> = ({ children }
   const activeConnection = connections.find(conn => conn.id === activeConnectionId);
   const config: ZookeeperConfig = {
     mode: 'http',
-    httpUrl: activeConnection?.url || 'http://localhost:12345'
+    httpUrl: activeConnection?.url || 'http://localhost:12345/dev'
   };
 
   useEffect(() => {

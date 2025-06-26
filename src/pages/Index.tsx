@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Database, ArrowRight, TreePine, Search, Plus } from "lucide-react";
@@ -61,7 +60,7 @@ const Index = () => {
                 Get Started
               </CardTitle>
               <CardDescription>
-                Connect to your Zookeeper instance at localhost:12345
+                Connect to your Zookeeper instance at localhost:12345/dev
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -81,8 +80,8 @@ const Index = () => {
               API Requirements
             </h3>
             <p className="text-slate-600 text-sm">
-              This browser expects a Zookeeper HTTP API running on localhost:12345 with endpoints 
-              for /get, /ls, /create, /set, and /delete operations.
+              This browser expects a Zookeeper HTTP API with endpoints 
+              for /get, /ls/, /create, /set and /delete operations.
             </p>
           </div>
         </div>
