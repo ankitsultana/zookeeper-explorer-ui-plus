@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   Sidebar,
@@ -13,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronRight, ChevronDown, Folder, FolderOpen, Plus, RefreshCw, Database } from "lucide-react";
+import { ChevronRight, ChevronDown, Folder, FolderOpen, Plus, RefreshCw, Database, FileText } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -180,7 +179,13 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
 
   const renderTree = (node: TreeNode, level: number = 0) => {
     const isSelected = node.path === selectedNode;
-    const Icon = node.expanded ? FolderOpen : Folder;
+    const hasChildren = node.hasChildren && node.children.length > 0;
+    
+    // Use folder icons for nodes with children, page icon for leaf nodes
+    const Icon = hasChildren 
+      ? (node.expanded ? FolderOpen : Folder)
+      : FileText;
+    
     const ChevronIcon = node.expanded ? ChevronDown : ChevronRight;
 
     return (
@@ -203,7 +208,7 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
                     </button>
                   )}
                 </div>
-                <Icon className="h-4 w-4 shrink-0 text-blue-600" />
+                <Icon className={`h-4 w-4 shrink-0 ${hasChildren ? 'text-blue-600' : 'text-slate-600'}`} />
                 <span className="truncate text-sm">{node.path === '/' ? 'root' : node.path.split('/').pop()}</span>
               </div>
             </SidebarMenuButton>
