@@ -179,10 +179,9 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
 
   const renderTree = (node: TreeNode, level: number = 0) => {
     const isSelected = node.path === selectedNode;
-    const hasChildren = node.hasChildren && node.children.length > 0;
     
-    // Use folder icons for nodes with children, page icon for leaf nodes
-    const Icon = hasChildren 
+    // Use folder icons for nodes that have children in ZooKeeper, page icon for leaf nodes
+    const Icon = node.hasChildren 
       ? (node.expanded ? FolderOpen : Folder)
       : FileText;
     
@@ -208,7 +207,7 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
                     </button>
                   )}
                 </div>
-                <Icon className={`h-4 w-4 shrink-0 ${hasChildren ? 'text-blue-600' : 'text-slate-600'}`} />
+                <Icon className={`h-4 w-4 shrink-0 ${node.hasChildren ? 'text-blue-600' : 'text-slate-600'}`} />
                 <span className="truncate text-sm">{node.path === '/' ? 'root' : node.path.split('/').pop()}</span>
               </div>
             </SidebarMenuButton>
