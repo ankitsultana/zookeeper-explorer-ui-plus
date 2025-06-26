@@ -16,6 +16,7 @@ interface ZNodeContentProps {
   loading: boolean;
   error: string | null;
   onRefresh: () => void;
+  onNodeSelect: (path: string) => void;
 }
 
 export const ZNodeContent: React.FC<ZNodeContentProps> = ({
@@ -23,7 +24,8 @@ export const ZNodeContent: React.FC<ZNodeContentProps> = ({
   selectedPath,
   loading,
   error,
-  onRefresh
+  onRefresh,
+  onNodeSelect
 }) => {
   const { service } = useZookeeper();
   const [editedData, setEditedData] = useState('');
@@ -83,6 +85,10 @@ export const ZNodeContent: React.FC<ZNodeContentProps> = ({
         title: "Success",
         description: "Node deleted successfully",
       });
+
+      // Navigate to parent node after deletion
+      const parentPath = selectedPath === '/' ? '/' : selectedPath.substring(0, selectedPath.lastIndexOf('/')) || '/';
+      onNodeSelect(parentPath);
 
       // Trigger refresh which will update both sidebar and content
       onRefresh();

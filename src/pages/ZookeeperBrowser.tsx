@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { Sidebar, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ZookeeperSidebar } from "@/components/ZookeeperSidebar";
@@ -102,6 +103,7 @@ const ZookeeperBrowserContent = () => {
                 loading={loading}
                 error={error}
                 onRefresh={handleRefresh}
+                onNodeSelect={handleNodeSelect}
               />
             </div>
           </main>
@@ -120,3 +122,4 @@ const ZookeeperBrowser = () => {
 };
 
 export default ZookeeperBrowser;
+
