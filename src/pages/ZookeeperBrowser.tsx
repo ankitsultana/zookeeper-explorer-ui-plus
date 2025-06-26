@@ -1,7 +1,7 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { Sidebar, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ZookeeperSidebar } from "@/components/ZookeeperSidebar";
 import { ZNodeContent } from "@/components/ZNodeContent";
 import { ZookeeperConfig } from "@/components/ZookeeperConfig";
@@ -96,15 +96,25 @@ const ZookeeperBrowserContent = () => {
               </div>
             </header>
             <div className="flex-1 p-6">
-              <ZookeeperConfig />
-              <ZNodeContent 
-                nodeData={nodeData}
-                selectedPath={selectedNode}
-                loading={loading}
-                error={error}
-                onRefresh={handleRefresh}
-                onNodeSelect={handleNodeSelect}
-              />
+              <Tabs defaultValue="browser" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="browser">Browser</TabsTrigger>
+                  <TabsTrigger value="connections">Connections</TabsTrigger>
+                </TabsList>
+                <TabsContent value="browser" className="mt-6">
+                  <ZNodeContent 
+                    nodeData={nodeData}
+                    selectedPath={selectedNode}
+                    loading={loading}
+                    error={error}
+                    onRefresh={handleRefresh}
+                    onNodeSelect={handleNodeSelect}
+                  />
+                </TabsContent>
+                <TabsContent value="connections" className="mt-6">
+                  <ZookeeperConfig />
+                </TabsContent>
+              </Tabs>
             </div>
           </main>
         </div>
@@ -122,4 +132,3 @@ const ZookeeperBrowser = () => {
 };
 
 export default ZookeeperBrowser;
-
