@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Sidebar, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ZookeeperSidebar } from "@/components/ZookeeperSidebar";
@@ -27,6 +28,7 @@ const ZookeeperBrowserContent = () => {
   const [nodeData, setNodeData] = useState<ZNode | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { service, connections, activeConnectionId } = useZookeeper();
 
   const activeConnection = connections.find(conn => conn.id === activeConnectionId);
@@ -51,14 +53,20 @@ const ZookeeperBrowserContent = () => {
     if (service) {
       fetchNodeData(selectedNode);
     }
-  }, [selectedNode, service]);
+  }, [selectedNode, service, refreshTrigger]);
 
   const handleNodeSelect = (path: string) => {
     setSelectedNode(path);
   };
 
   const handleRefresh = () => {
-    fetchNodeData(selectedNode);
+    // Increment refresh trigger to force both sidebar tree and content to refresh
+    setRefreshTrigger(prev => prev + 1);
+  };
+
+  const handleSidebarRefresh = () => {
+    // Trigger refresh for sidebar tree updates
+    setRefreshTrigger(prev => prev + 1);
   };
 
   return (
@@ -68,7 +76,8 @@ const ZookeeperBrowserContent = () => {
           <ZookeeperSidebar 
             selectedNode={selectedNode}
             onNodeSelect={handleNodeSelect}
-            onRefresh={handleRefresh}
+            onRefresh={handleSidebarRefresh}
+            refreshTrigger={refreshTrigger}
           />
           <main className="flex-1 flex flex-col">
             <header className="bg-white border-b border-slate-200 p-4 shadow-sm">

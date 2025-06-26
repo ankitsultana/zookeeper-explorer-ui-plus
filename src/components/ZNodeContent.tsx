@@ -84,6 +84,7 @@ export const ZNodeContent: React.FC<ZNodeContentProps> = ({
         description: "Node deleted successfully",
       });
 
+      // Trigger refresh which will update both sidebar and content
       onRefresh();
     } catch (error) {
       toast({

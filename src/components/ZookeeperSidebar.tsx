@@ -31,12 +31,14 @@ interface ZookeeperSidebarProps {
   selectedNode: string;
   onNodeSelect: (path: string) => void;
   onRefresh: () => void;
+  refreshTrigger: number;
 }
 
 export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
   selectedNode,
   onNodeSelect,
-  onRefresh
+  onRefresh,
+  refreshTrigger
 }) => {
   const { service } = useZookeeper();
   const [tree, setTree] = useState<TreeNode>({
@@ -148,9 +150,7 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
       setIsEphemeral(false);
       setDialogOpen(false);
       
-      // Refresh the tree
-      const newTree = await loadTreeNode(tree);
-      setTree(newTree);
+      // Refresh the tree and trigger parent refresh
       onRefresh();
     } catch (error) {
       toast({
@@ -161,9 +161,22 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
     }
   };
 
+  const refreshTree = async () => {
+    const newTree = await loadTreeNode({
+      path: '/',
+      children: [],
+      expanded: true,
+      hasChildren: true
+    });
+    setTree(newTree);
+  };
+
+  // Initial load and refresh when refreshTrigger changes
   useEffect(() => {
-    loadTreeNode(tree).then(setTree);
-  }, []);
+    if (service) {
+      refreshTree();
+    }
+  }, [service, refreshTrigger]);
 
   const renderTree = (node: TreeNode, level: number = 0) => {
     const isSelected = node.path === selectedNode;
@@ -222,7 +235,7 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
           <Button
             size="sm"
             variant="ghost"
-            onClick={() => loadTreeNode(tree).then(setTree)}
+            onClick={refreshTree}
             className="ml-auto h-8 w-8 p-0"
           >
             <RefreshCw className="h-4 w-4" />
