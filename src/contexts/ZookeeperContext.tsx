@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import ZookeeperService, { ZookeeperConfig } from '../services/zookeeperService';
 import { ZookeeperConnection } from '../components/ZookeeperConnectionManager';
@@ -25,22 +26,75 @@ interface ZookeeperProviderProps {
   children: React.ReactNode;
 }
 
-export const ZookeeperProvider: React.FC<ZookeeperProviderProps> = ({ children }) => {
-  const [connections, setConnections] = useState<ZookeeperConnection[]>([
+const STORAGE_KEYS = {
+  CONNECTIONS: 'zookeeper-connections',
+  ACTIVE_CONNECTION: 'zookeeper-active-connection'
+};
+
+const loadConnectionsFromStorage = (): ZookeeperConnection[] => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEYS.CONNECTIONS);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (error) {
+    console.error('Error loading connections from localStorage:', error);
+  }
+  
+  // Return default connection if nothing in storage
+  return [
     {
       id: 'default',
       name: 'Local Development',
-      url: 'http://localhost:12345/dev'
+      url: 'localhost:12345/dev'
     }
-  ]);
-  const [activeConnectionId, setActiveConnectionId] = useState<string>('default');
+  ];
+};
+
+const loadActiveConnectionFromStorage = (connections: ZookeeperConnection[]): string => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEYS.ACTIVE_CONNECTION);
+    if (stored && connections.find(conn => conn.id === stored)) {
+      return stored;
+    }
+  } catch (error) {
+    console.error('Error loading active connection from localStorage:', error);
+  }
+  
+  // Return first connection ID if nothing valid in storage
+  return connections.length > 0 ? connections[0].id : 'default';
+};
+
+export const ZookeeperProvider: React.FC<ZookeeperProviderProps> = ({ children }) => {
+  const [connections, setConnections] = useState<ZookeeperConnection[]>(() => loadConnectionsFromStorage());
+  const [activeConnectionId, setActiveConnectionId] = useState<string>(() => 
+    loadActiveConnectionFromStorage(loadConnectionsFromStorage())
+  );
   const [service, setService] = useState<ZookeeperService | null>(null);
 
   const activeConnection = connections.find(conn => conn.id === activeConnectionId);
   const config: ZookeeperConfig = {
     mode: 'http',
-    httpUrl: activeConnection?.url || 'http://localhost:12345/dev'
+    httpUrl: activeConnection?.url || 'localhost:12345/dev'
   };
+
+  // Save connections to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.CONNECTIONS, JSON.stringify(connections));
+    } catch (error) {
+      console.error('Error saving connections to localStorage:', error);
+    }
+  }, [connections]);
+
+  // Save active connection to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.ACTIVE_CONNECTION, activeConnectionId);
+    } catch (error) {
+      console.error('Error saving active connection to localStorage:', error);
+    }
+  }, [activeConnectionId]);
 
   useEffect(() => {
     const newService = new ZookeeperService(config);
