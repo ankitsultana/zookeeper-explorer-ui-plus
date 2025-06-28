@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Database, ArrowRight, TreePine, Search, Plus } from "lucide-react";
@@ -80,8 +81,15 @@ const Index = () => {
               API Requirements
             </h3>
             <p className="text-slate-600 text-sm">
-              This browser expects a Zookeeper HTTP API with endpoints 
-              for /get, /ls/, /create, /set and /delete operations.
+              This browser expects a HTTP Proxy for connecting to Zookeeper. One of them is available at:{" "}
+              <a 
+                href="https://github.com/ankitsultana/keeper-ui" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-700 underline"
+              >
+                https://github.com/ankitsultana/keeper-ui
+              </a>
             </p>
           </div>
         </div>
