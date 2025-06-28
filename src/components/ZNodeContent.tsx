@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { RefreshCw, Save, FileText, Info, Trash2, Clock, Hash, Users, Zap } from "lucide-react";
+import { RefreshCw, Save, FileText, Info, Trash2, Clock, Hash, Users, Zap, Copy } from "lucide-react";
 import { ZNode } from '../pages/ZookeeperBrowser';
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -96,6 +96,24 @@ export const ZNodeContent: React.FC<ZNodeContentProps> = ({
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to delete node",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const copyToClipboard = async () => {
+    if (!nodeData) return;
+    
+    try {
+      await navigator.clipboard.writeText(nodeData.data);
+      toast({
+        title: "Success",
+        description: "Node data copied to clipboard",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to copy to clipboard",
         variant: "destructive",
       });
     }
@@ -213,13 +231,23 @@ export const ZNodeContent: React.FC<ZNodeContentProps> = ({
                     </Button>
                   </>
                 ) : (
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => setIsEditing(true)}
-                  >
-                    Edit
-                  </Button>
+                  <>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={copyToClipboard}
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      Copy
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setIsEditing(true)}
+                    >
+                      Edit
+                    </Button>
+                  </>
                 )}
               </div>
             </CardHeader>
