@@ -1,3 +1,4 @@
+
 export interface ZookeeperConfig {
   mode: 'http';
   httpUrl: string;
@@ -28,8 +29,19 @@ class ZookeeperService {
     this.config = config;
   }
 
+  private getBaseUrl(): string {
+    let url = this.config.httpUrl;
+    
+    // Add http:// if no protocol is specified
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `http://${url}`;
+    }
+    
+    return url;
+  }
+
   async getChildren(path: string): Promise<string[]> {
-    const response = await fetch(`${this.config.httpUrl}/ls?path=${encodeURIComponent(path)}`);
+    const response = await fetch(`${this.getBaseUrl()}/ls?path=${encodeURIComponent(path)}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch children: ${response.statusText}`);
     }
@@ -38,7 +50,7 @@ class ZookeeperService {
   }
 
   async getData(path: string): Promise<ZNodeData> {
-    const response = await fetch(`${this.config.httpUrl}/get?path=${encodeURIComponent(path)}`);
+    const response = await fetch(`${this.getBaseUrl()}/get?path=${encodeURIComponent(path)}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch node data: ${response.statusText}`);
     }
@@ -46,7 +58,7 @@ class ZookeeperService {
   }
 
   async setData(path: string, data: string): Promise<void> {
-    const response = await fetch(`${this.config.httpUrl}/set`, {
+    const response = await fetch(`${this.getBaseUrl()}/set`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -60,7 +72,7 @@ class ZookeeperService {
   }
 
   async create(path: string, data: string = '', isEphemeral: boolean = false): Promise<void> {
-    const response = await fetch(`${this.config.httpUrl}/create`, {
+    const response = await fetch(`${this.getBaseUrl()}/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,7 +86,7 @@ class ZookeeperService {
   }
 
   async remove(path: string): Promise<void> {
-    const response = await fetch(`${this.config.httpUrl}/delete?path=${encodeURIComponent(path)}`, {
+    const response = await fetch(`${this.getBaseUrl()}/delete?path=${encodeURIComponent(path)}`, {
       method: 'DELETE',
     });
 

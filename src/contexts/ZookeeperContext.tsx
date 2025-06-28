@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import ZookeeperService, { ZookeeperConfig } from '../services/zookeeperService';
 import { ZookeeperConnection } from '../components/ZookeeperConnectionManager';
@@ -46,7 +45,7 @@ const loadConnectionsFromStorage = (): ZookeeperConnection[] => {
     {
       id: 'default',
       name: 'Local Development',
-      url: 'localhost:12345/dev'
+      url: 'http://localhost:12345/dev'
     }
   ];
 };
@@ -75,7 +74,7 @@ export const ZookeeperProvider: React.FC<ZookeeperProviderProps> = ({ children }
   const activeConnection = connections.find(conn => conn.id === activeConnectionId);
   const config: ZookeeperConfig = {
     mode: 'http',
-    httpUrl: activeConnection?.url || 'localhost:12345/dev'
+    httpUrl: activeConnection?.url || 'http://localhost:12345/dev'
   };
 
   // Save connections to localStorage whenever they change
