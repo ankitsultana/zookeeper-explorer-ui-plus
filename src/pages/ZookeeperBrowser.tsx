@@ -6,6 +6,9 @@ import { ZookeeperSidebar } from "@/components/ZookeeperSidebar";
 import { ZNodeContent } from "@/components/ZNodeContent";
 import { ZookeeperConfig } from "@/components/ZookeeperConfig";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { ExternalLink } from "lucide-react";
 import { ZookeeperProvider, useZookeeper } from "../contexts/ZookeeperContext";
 
 export interface ZNode {
@@ -82,17 +85,40 @@ const ZookeeperBrowserContent = () => {
           />
           <main className="flex-1 flex flex-col">
             <header className="bg-white border-b border-slate-200 p-4 shadow-sm">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger className="hover:bg-slate-100 p-2 rounded-md transition-colors" />
-                <Separator orientation="vertical" className="h-6" />
-                <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-bold text-slate-800">Zookeeper Browser</h1>
-                  {activeConnection && (
-                    <div className="text-sm text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
-                      {activeConnection.name} • {activeConnection.url}
-                    </div>
-                  )}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger className="hover:bg-slate-100 p-2 rounded-md transition-colors" />
+                  <Separator orientation="vertical" className="h-6" />
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-slate-800">Zookeeper Browser</h1>
+                    {activeConnection && (
+                      <div className="text-sm text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
+                        {activeConnection.name} • {activeConnection.url}
+                      </div>
+                    )}
+                  </div>
                 </div>
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => window.open('https://github.com/ankitsultana/keeper-ui', '_blank')}
+                      className="flex items-center gap-2"
+                    >
+                      Help
+                      <ExternalLink className="h-3 w-3" />
+                    </Button>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-semibold">Documentation</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Visit the GitHub documentation page for setup instructions and API details.
+                      </p>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             </header>
             <div className="flex-1 p-6">
