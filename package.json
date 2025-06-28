@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://ankitsultana.com/zk",
+  "homepage": "https://ankitsultana.com/zookeeper-explorer-ui-plus",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
