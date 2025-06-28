@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import {
   Sidebar,
@@ -69,12 +70,18 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
 
   const loadTreeNode = async (node: TreeNode): Promise<TreeNode> => {
     const children = await fetchChildren(node.path);
-    const childNodes: TreeNode[] = children.map(child => ({
-      path: node.path === '/' ? `/${child}` : `${node.path}/${child}`,
-      children: [],
-      expanded: false,
-      hasChildren: true // We'll assume nodes might have children
-    }));
+    const childNodes: TreeNode[] = await Promise.all(
+      children.map(async (child) => {
+        const childPath = node.path === '/' ? `/${child}` : `${node.path}/${child}`;
+        const grandChildren = await fetchChildren(childPath);
+        return {
+          path: childPath,
+          children: [],
+          expanded: false,
+          hasChildren: grandChildren.length > 0
+        };
+      })
+    );
 
     return {
       ...node,
@@ -199,22 +206,20 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
               <div className="flex items-center gap-1 min-w-0 flex-1">
                 <div className="w-4 h-4 flex items-center justify-center shrink-0">
                   {node.hasChildren && (
-                    <button
+                    <div
                       onClick={(e) => handleToggleClick(node, e)}
-                      className="p-0 hover:bg-slate-200 rounded-sm transition-colors"
+                      className="p-0 hover:bg-slate-200 rounded-sm transition-colors cursor-pointer"
                     >
                       <ChevronIcon className="h-3 w-3" />
-                    </button>
+                    </div>
                   )}
                 </div>
                 <Icon className={`h-4 w-4 shrink-0 ${node.hasChildren ? 'text-blue-600' : 'text-slate-600'}`} />
                 <span className="truncate text-sm">{node.path === '/' ? 'root' : node.path.split('/').pop()}</span>
               </div>
             </SidebarMenuButton>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="h-6 w-6 p-0 opacity-0 group-hover/menu-item:opacity-100 transition-opacity shrink-0"
+            <div
+              className="h-6 w-6 p-0 opacity-0 group-hover/menu-item:opacity-100 transition-opacity shrink-0 hover:bg-slate-200 rounded-sm flex items-center justify-center cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedParent(node.path);
@@ -222,7 +227,7 @@ export const ZookeeperSidebar: React.FC<ZookeeperSidebarProps> = ({
               }}
             >
               <Plus className="h-3 w-3" />
-            </Button>
+            </div>
           </div>
         </SidebarMenuItem>
         {node.expanded && node.children.map(child => renderTree(child, level + 1))}
