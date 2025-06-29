@@ -23,8 +23,10 @@ const Index = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           <Card className="border-blue-200 hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <TreePine className="h-8 w-8 text-blue-600 mb-2" />
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-2">
+                <TreePine className="h-8 w-8 text-blue-600" />
+              </div>
               <CardTitle>Tree Navigation</CardTitle>
               <CardDescription>
                 Browse your ZNode hierarchy with an intuitive tree structure
@@ -33,8 +35,10 @@ const Index = () => {
           </Card>
 
           <Card className="border-green-200 hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <Search className="h-8 w-8 text-green-600 mb-2" />
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-2">
+                <Search className="h-8 w-8 text-green-600" />
+              </div>
               <CardTitle>Node Details</CardTitle>
               <CardDescription>
                 View comprehensive information about each ZNode including data and statistics
@@ -43,8 +47,10 @@ const Index = () => {
           </Card>
 
           <Card className="border-purple-200 hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <Plus className="h-8 w-8 text-purple-600 mb-2" />
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-2">
+                <Plus className="h-8 w-8 text-purple-600" />
+              </div>
               <CardTitle>Node Management</CardTitle>
               <CardDescription>
                 Create, edit, and delete ZNodes directly from the browser interface
