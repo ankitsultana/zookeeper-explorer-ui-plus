@@ -65,7 +65,7 @@ const Index = () => {
                 <Database className="h-5 w-5" />
                 Get Started
               </CardTitle>
-              <CardDescription className="text-center">
+              <CardDescription className="text-center pt-2">
                 Connect to your Zookeeper Instance
               </CardDescription>
             </CardHeader>
@@ -85,7 +85,7 @@ const Index = () => {
                 <Settings className="h-5 w-5" />
                 How to Setup
               </CardTitle>
-              <CardDescription className="text-center">
+              <CardDescription className="text-center pt-2">
                 Learn about the required architecture
               </CardDescription>
             </CardHeader>
@@ -101,22 +101,17 @@ const Index = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <div className="bg-slate-100 rounded-lg p-6 max-w-2xl mx-auto">
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">
-              API Requirements
-            </h3>
-            <p className="text-slate-600 text-sm">
-              This browser expects a HTTP Proxy for connecting to Zookeeper. One of them is available at:{" "}
-              <a 
-                href="https://github.com/ankitsultana/keeper-ui" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-700 underline"
-              >
-                https://github.com/ankitsultana/keeper-ui
-              </a>
-            </p>
-          </div>
+          <p className="text-slate-600 text-sm">
+            Source:{" "}
+            <a 
+              href="https://github.com/ankitsultana/keeper-ui" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-700 underline"
+            >
+              https://github.com/ankitsultana/keeper-ui
+            </a>
+          </p>
         </div>
       </div>
     </div>
