@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Database, ArrowRight, TreePine, Search, Plus, Settings } from "lucide-react";
@@ -66,7 +65,7 @@ const Index = () => {
                 <Database className="h-5 w-5" />
                 Get Started
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-center">
                 Connect to your Zookeeper Instance
               </CardDescription>
             </CardHeader>
@@ -86,7 +85,7 @@ const Index = () => {
                 <Settings className="h-5 w-5" />
                 How to Setup
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-center">
                 Learn about the required architecture
               </CardDescription>
             </CardHeader>
