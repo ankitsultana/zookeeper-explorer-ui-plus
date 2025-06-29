@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Database, Server, Globe, ExternalLink } from "lucide-react";
@@ -43,7 +42,7 @@ const Setup = () => {
             <CardContent>
               <div className="flex justify-center mb-6">
                 <img 
-                  src="/lovable-uploads/87e69a3b-0e75-4325-b172-bbad8076a30d.png" 
+                  src="/lovable-uploads/e8d79631-97cb-4a44-a5ad-061f34ad3c05.png" 
                   alt="Zookeeper Browser Architecture Diagram"
                   className="max-w-full h-auto rounded-lg border shadow-lg"
                 />
