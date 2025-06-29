@@ -1,6 +1,7 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Database, ArrowRight, TreePine, Search, Plus } from "lucide-react";
+import { Database, ArrowRight, TreePine, Search, Plus, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -52,8 +53,8 @@ const Index = () => {
           </Card>
         </div>
 
-        <div className="text-center">
-          <Card className="max-w-md mx-auto border-slate-200 bg-white/80 backdrop-blur-sm">
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <Card className="border-slate-200 bg-white/80 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="flex items-center justify-center gap-2">
                 <Database className="h-5 w-5" />
@@ -67,6 +68,26 @@ const Index = () => {
               <Link to="/zookeeper">
                 <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700">
                   Open Zookeeper Browser
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="border-orange-200 bg-white/80 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-center gap-2">
+                <Settings className="h-5 w-5" />
+                How to Setup
+              </CardTitle>
+              <CardDescription>
+                Learn about the required architecture
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link to="/setup">
+                <Button size="lg" variant="outline" className="w-full border-orange-300 text-orange-700 hover:bg-orange-50">
+                  View Setup Guide
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
